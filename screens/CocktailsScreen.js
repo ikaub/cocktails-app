@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 
-import {View, Text} from "react-native";
+import {View, Text, StyleSheet, FlatList} from "react-native";
+import DrinkItem from "../components/DrinkItem";
 
 const CocktailsScreen = () => {
     const [drinks, setDrinks] = useState([]);
@@ -10,20 +11,33 @@ const CocktailsScreen = () => {
             method: 'GET'
         }).then(response => response.json())
             .then(response => setDrinks(response.drinks));
-    });
+    }, [setDrinks]);
+
+    if (!drinks.length)
+        return <Text>Loading...</Text>
 
     return (
-        <View>
+        <View style={styles.screen}>
             <Text>Ordinary Drink</Text>
             <View>
-                <Text>
-                    {
-                        drinks.map(drink => drink.strDrink)
+                <FlatList
+                    keyExtractor={item => item.idDrink}
+                    data={drinks}
+                    renderItem={
+                        (itemData) => (
+                            <DrinkItem drink={itemData.item}/>
+                        )
                     }
-                </Text>
+                />
             </View>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    screen: {
+        flex: 1
+    }
+})
 
 export default CocktailsScreen;

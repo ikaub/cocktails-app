@@ -38,8 +38,6 @@ const CocktailsScreen = () => {
         }
     }
 
-    console.log(displayedCategories)
-
     return (
         <View style={styles.screen}>
             <View>

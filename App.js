@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+
 import React from 'react';
 import DrinksNavigator from "./navigation/DrinksNavigator";
 import NavigationContainer from "@react-navigation/native/src/NavigationContainer";

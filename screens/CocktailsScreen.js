@@ -1,33 +1,57 @@
 import React, {useEffect, useState} from "react";
-
 import {View, Text, StyleSheet, FlatList} from "react-native";
-import DrinkItem from "../components/DrinkItem";
+import DrinksCategory from "../components/DrinksCategory";
+import ListFooter from "../components/ListFooter";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchCategories} from "../redux/actions/categories.actions";
+
+const renderCategories = (itemData) => {
+    return <DrinksCategory category={itemData.item.strCategory}/>
+}
 
 const CocktailsScreen = () => {
-    const [drinks, setDrinks] = useState([]);
+    const categories = useSelector(state => state.categories.filteredCategories);
+    const [displayedCategories, setDisplayedCategories] = useState([]);
+    const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(true);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetch('https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Ordinary Drink', {
-            method: 'GET'
-        }).then(response => response.json())
-            .then(response => setDrinks(response.drinks));
-    }, [setDrinks]);
+        if (!categories.length)
+            dispatch(fetchCategories());
+        else
+            setDisplayedCategories([categories[0]]);
+    }, [categories]);
 
-    if (!drinks.length)
-        return <Text>Loading...</Text>
+    if (!categories.length) {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
+    const handleLoadMore = () => {
+        if (!onEndReachedCalledDuringMomentum && displayedCategories.length < categories.length) {
+            setOnEndReachedCalledDuringMomentum(true);
+            setDisplayedCategories([...displayedCategories, categories[displayedCategories.length]]);
+        }
+    }
+
+    console.log(displayedCategories)
 
     return (
         <View style={styles.screen}>
-            <Text>Ordinary Drink</Text>
             <View>
                 <FlatList
-                    keyExtractor={item => item.idDrink}
-                    data={drinks}
-                    renderItem={
-                        (itemData) => (
-                            <DrinkItem drink={itemData.item}/>
-                        )
-                    }
+                    keyExtractor={item => item.strCategory}
+                    data={displayedCategories}
+                    renderItem={renderCategories}
+                    style={styles.list}
+                    onEndReached={handleLoadMore}
+                    onEndReachedThreshold={0.01}
+                    onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+                    ListFooterComponent={ListFooter}
                 />
             </View>
         </View>
@@ -37,6 +61,11 @@ const CocktailsScreen = () => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1
+    },
+
+    list: {
+        marginBottom: 30,
+        padding: 20
     }
 })
 

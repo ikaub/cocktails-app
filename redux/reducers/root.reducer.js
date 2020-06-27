@@ -1,8 +1,8 @@
 import {combineReducers} from "redux";
-import drinksReducer from "./drinks.reducer";
+import categoriesReducer from "./categories.reducer";
 
 const rootReducer = combineReducers({
-    drinks: drinksReducer
+    categories: categoriesReducer
 });
 
 export default rootReducer;

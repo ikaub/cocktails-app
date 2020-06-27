@@ -4,6 +4,7 @@ import NavigationContainer from "@react-navigation/native/src/NavigationContaine
 import {Provider} from "react-redux";
 import store from "./redux/store/store";
 
+
 const App = () => {
     return (
         <Provider store={store}>

@@ -1,21 +1,22 @@
-import React from "react";
-import {View, Image, StyleSheet, Text} from "react-native";
+import React, {memo} from "react";
+import {View, StyleSheet, Text} from "react-native";
+import FastImage from "react-native-fast-image";
 
-const DrinkItem = ({drink: {strDrink, strDrinkThumb}}) => {
+const DrinkItem = memo(({drink: {strDrink, strDrinkThumb}}) => {
     return (
         <View style={styles.drink}>
-            <Image source={{uri: strDrinkThumb}} style={styles.image}/>
+            <FastImage source={{uri: strDrinkThumb}} style={styles.image}/>
             <Text style={styles.drinkLabel}>{strDrink}</Text>
         </View>
     );
-}
+});
 
 const styles = StyleSheet.create({
     drink: {
         width: '90%',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 20
+        marginVertical: 10
     },
     image: {
         height: 100,
